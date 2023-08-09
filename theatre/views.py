@@ -22,9 +22,14 @@ from theatre.serializers import (
     TheatreHallSerializer,
     PlaySerializer,
     PlayListSerializer,
-    PlayDetailSerializer
+    PlayDetailSerializer,
+    PerformanceSerializer,
+    PerformanceListSerializer,
+    PerformanceDetailSerializer,
+    TicketSerializer,
+    TicketListSerializer,
+    TicketTakenSeatsSerializer,
 )
-
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
@@ -71,5 +76,43 @@ class PlayViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(genres__id__in=genres_ids)
         if title:
             queryset = queryset.filter(title__icontains=title)
+
+        return queryset.distinct()
+
+
+class PerformanceViewSet(viewsets.ModelViewSet):
+    queryset = Performance.objects.all()
+    serializer_class = PerformanceSerializer
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return PerformanceListSerializer
+
+        if self.action == "retrieve":
+            return PerformanceDetailSerializer
+
+        return PerformanceSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        if self.action in ("list", "retrieve"):
+            queryset = (
+                queryset
+                .select_related("play", "theatre_hall")
+                .annotate(tickets_available=(
+                        F("theatre_hall__rows")
+                        * F("theatre_hall__seats_in_row")
+                        - Count("tickets")
+                ))
+            )
+
+        date = self.request.query_params.get("date")
+        play = self.request.query_params.get("play")
+        if date:
+            queryset = queryset.filter(show_time__date=date)
+        if play:
+            play_id = int(play)
+            queryset = queryset.filter(play__id=play_id)
 
         return queryset.distinct()
