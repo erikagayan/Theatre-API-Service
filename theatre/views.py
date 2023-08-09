@@ -19,6 +19,7 @@ from theatre.models import (
 from theatre.serializers import (
     GenreSerializer,
     ActorSerializer,
+    TheatreHallSerializer,
 )
 
 
@@ -30,3 +31,8 @@ class GenreViewSet(viewsets.ModelViewSet):
 class ActorViewSet(viewsets.ModelViewSet):
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
+
+
+class TheatreHallViewSet(viewsets.ModelViewSet):
+    queryset = TheatreHall.objects.all()
+    serializer_class = TheatreHallSerializer

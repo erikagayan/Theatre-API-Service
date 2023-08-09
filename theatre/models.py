@@ -18,7 +18,7 @@ class Actor(models.Model):
     last_name = models.CharField(max_length=255)
 
     class Meta:
-        ordering = ["first_name"]
+        ordering = ["id"]
 
     def __str__(self):
         return str(self.first_name + " " + self.last_name)
