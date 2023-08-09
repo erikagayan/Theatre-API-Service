@@ -29,7 +29,10 @@ from theatre.serializers import (
     TicketSerializer,
     TicketListSerializer,
     TicketTakenSeatsSerializer,
+    ReservationSerializer,
+    ReservationListSerializer,
 )
+
 
 class GenreViewSet(viewsets.ModelViewSet):
     queryset = Genre.objects.all()
@@ -116,3 +119,35 @@ class PerformanceViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(play__id=play_id)
 
         return queryset.distinct()
+
+
+class ReservationPagination(PageNumberPagination):
+    page_size = 2
+    page_query_param = "page_size"
+    max_page_size = 100
+
+
+class ReservationViewSet(viewsets.ModelViewSet):
+    queryset = Reservation.objects.all()
+    serializer_class = ReservationSerializer
+    pagination_class = ReservationPagination
+
+    def get_queryset(self):
+        queryset = self.queryset.filter(user=self.request.user)
+
+        if self.action == "list":
+            queryset = queryset.prefetch_related(
+                "tickets__performance__theatre_hall",
+                "tickets__performance__play"
+            )
+
+        return queryset
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ReservationListSerializer
+
+        return ReservationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
