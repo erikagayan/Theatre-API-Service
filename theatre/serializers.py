@@ -1,18 +1,23 @@
+from django.db import transaction
 from rest_framework import serializers
-from theatre.models import Play
+from theatre.models import (
+    Genre,
+    Actor,
+    TheatreHall,
+    Play,
+    Performance,
+    Ticket,
+    Reservation
+)
 
 
-class PlaySerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    title = serializers.CharField(required=True)
-    description = serializers.IntegerField()
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        fields = ("id", "name")
 
-    def create(self, validated_data):
-        return Play.objects.create(**validated_data)
 
-    def update(self, instance, validated_data):
-        instance.title = validated_data.get("title", instance.info)
-        instance.description = validated_data.get("description", instance.description)
-
-        instance.save()
-        return instance
+class ActorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Actor
+        fields = ("id", "first_name", "last_name", "full_name")
