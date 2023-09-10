@@ -50,7 +50,7 @@ class PlayDetailSerializer(PlaySerializer):
 
     class Meta:
         model = Play
-        fields = ("id", "title", "duration", "genres", "actors")
+        fields = ("id", "title", "genres", "actors")
 
 
 class PerformanceSerializer(serializers.ModelSerializer):
@@ -88,7 +88,9 @@ class TicketSerializer(serializers.ModelSerializer):
 
 
 class TicketListSerializer(TicketSerializer):
-    movie_session = PerformanceListSerializer(many=False, read_only=True)
+    class Meta:
+        model = Ticket
+        fields = ("id", "row", "seat", "performance")
 
 
 class TicketTakenSeatsSerializer(TicketSerializer):
@@ -98,8 +100,6 @@ class TicketTakenSeatsSerializer(TicketSerializer):
 
 
 class PerformanceDetailSerializer(PerformanceSerializer):
-    movie = PlayListSerializer(many=False, read_only=True)
-    cinema_hall = PerformanceListSerializer(many=False, read_only=True)
     taken_places = TicketTakenSeatsSerializer(
         source="tickets",
         many=True,

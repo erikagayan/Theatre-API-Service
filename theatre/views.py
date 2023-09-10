@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.db.models import F, Count
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
@@ -92,6 +93,29 @@ class PlayViewSet(mixins.ListModelMixin,
 
         return queryset.distinct()
 
+    '''Only for documentation'''
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "actors",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by actors",
+            ),
+            OpenApiParameter(
+                "genres",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by genres",
+            ),
+            OpenApiParameter(
+                "title",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by title",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = Performance.objects.all()
@@ -130,6 +154,25 @@ class PerformanceViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(play__id=play_id)
 
         return queryset.distinct()
+
+    '''Only for documentation'''
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "date",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by date",
+            ),
+            OpenApiParameter(
+                "play",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by play",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class ReservationPagination(PageNumberPagination):

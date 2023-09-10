@@ -42,10 +42,10 @@ INSTALLED_APPS = [
 
     "rest_framework",
     "rest_framework_simplejwt",
-    "drf_spectacular"
+    "drf_spectacular",
 
     "theatre",
-    "user"
+    "user",
 ]
 
 MIDDLEWARE = [
@@ -135,8 +135,8 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    # "DEFAULT_SCHEMA_CLASS":
-    #     "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_SCHEMA_CLASS":
+        "drf_spectacular.openapi.AutoSchema",
 
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -149,15 +149,15 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": False,
 }
 
-# SPECTACULAR_SETTINGS = {
-#     "TITLE": "Theatre API service",
-#     "DESCRIPTION": "Order tickets for theatre plays",
-#     "VERSION": "1.0.0",
-#     "SERVE_INCLUDE_SCHEMA": False,
-#     "SWAGGER_UI_SETTINGS": {
-#         "deepLinking": True,
-#         "defaultModelRendering": "model",
-#         "defaultModelExpandDepth": 2,
-#         "defaultModelsExpandDepth": 2,
-#     }
-# }
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Theatre API service",
+    "DESCRIPTION": "Order tickets for theatre plays",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelExpandDepth": 2,
+        "defaultModelsExpandDepth": 2,
+    }
+}
