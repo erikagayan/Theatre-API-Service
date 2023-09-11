@@ -93,7 +93,6 @@ class PlayViewSet(mixins.ListModelMixin,
 
         return queryset.distinct()
 
-    '''Only for documentation'''
     @extend_schema(
         parameters=[
             OpenApiParameter(
@@ -154,8 +153,6 @@ class PerformanceViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(play__id=play_id)
 
         return queryset.distinct()
-
-    '''Only for documentation'''
 
     @extend_schema(
         parameters=[
